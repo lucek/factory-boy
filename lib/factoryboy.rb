@@ -1,17 +1,20 @@
 module Factoryboy
   @defined_factories = {}
 
-  def self.define_factory(klass, &block)
-    attributes = AttributeBuilder.new(block)
-    @defined_factories[:"#{klass}"] = AttributeBuilder.new(block)
+  def self.define_factory(name, opts={}, &block)
+    built_factory = FactoryBuilder.new(block, opts[:class])
+    @defined_factories[name] = built_factory
   end
 
-  def self.build(klass, attributes={})
-    klass_symbol = klass.to_s.to_sym
-    raise FactoryNotDefinedError unless @defined_factories.keys.include?(klass_symbol)
+  def self.build(name, attributes={})
+    raise FactoryNotDefinedError unless @defined_factories.keys.include?(name)
+
+    defined_factory = @defined_factories[name]
+    defined_class   = defined_factory.instance_variable_get(:@class)
+    klass = defined_class ? defined_class : Object.const_get(name.to_s.split('_').collect(&:capitalize).join)
 
     object = klass.new
-    @defined_factories[klass_symbol].evaluate(object)
+    defined_factory.evaluate(object)
 
     if !attributes.empty?
       attributes.each do |k,v|
@@ -23,9 +26,10 @@ module Factoryboy
   end
 end
 
-class AttributeBuilder
-  def initialize(block)
+class FactoryBuilder
+  def initialize(block, klass)
     @block = block
+    @class = klass
   end
 
   def method_missing(method, *args, &block)
