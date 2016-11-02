@@ -12,6 +12,12 @@ describe FactoryBoy do
   end
 
   describe "#define_factory" do
+    context "user has passed name that does not map to any class name" do
+      it "should raise UnknownClassError" do
+        expect { FactoryBoy.define_factory(:non_existing_class) }.to raise_error(UnknownClassError)
+      end
+    end
+
     context "user has not passed class when defining a factory" do
       before :each do
         FactoryBoy.define_factory(:user)

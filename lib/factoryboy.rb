@@ -2,6 +2,8 @@ module FactoryBoy
   @defined_factories = {}
 
   def self.define_factory(name, opts={}, &block)
+    raise UnknownClassError unless Object.const_defined?(name.to_s.split('_').collect(&:capitalize).join)
+
     built_factory = FactoryBuilder.new(block, opts[:class])
     @defined_factories[name] = built_factory
   end
@@ -42,6 +44,9 @@ class FactoryBuilder
       instance_eval(&@block)
     end
   end
+end
+
+class UnknownClassError < StandardError
 end
 
 class FactoryNotDefinedError < StandardError
