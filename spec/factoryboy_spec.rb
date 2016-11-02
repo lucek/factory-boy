@@ -19,9 +19,19 @@ describe Factoryboy do
         Factoryboy.define_factory(User)
       end
 
-      it "should return new class instance" do
-        object = Factoryboy.build(User)
-        expect(object).to be_a(User)
+      context "user hasn't passed any attributes to the build method" do
+        it "should return new class instance with standard attributes" do
+          object = Factoryboy.build(User)
+          expect(object).to be_a(User)
+        end
+      end
+
+      context "user has passed attributes to the build method" do
+        it "should return new class instance with passed attributes" do
+          object = Factoryboy.build(User, { name: "foo" })
+          expect(object).to be_a(User)
+          expect(object.name).to eql("foo")
+        end
       end
     end
 
