@@ -1,5 +1,9 @@
 require "factoryboy/version"
 
 module Factoryboy
-  # Your code goes here...
+  @defined_factories = []
+
+  def self.define_factory(klass)
+    @defined_factories << klass
+  end
 end
