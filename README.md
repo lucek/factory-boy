@@ -1,4 +1,4 @@
-# Factoryboy
+# FactoryBoy
 
 TODO: Write a gem description
 

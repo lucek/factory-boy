@@ -1,4 +1,4 @@
-module Factoryboy
+module FactoryBoy
   @defined_factories = {}
 
   def self.define_factory(name, opts={}, &block)

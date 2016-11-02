@@ -5,7 +5,7 @@ require 'factoryboy/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "factoryboy"
-  spec.version       = Factoryboy::VERSION
+  spec.version       = FactoryBoy::VERSION
   spec.authors       = ["Łukasz Odziewa"]
   spec.email         = ["lukasz.odziewa@gmail.com"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
