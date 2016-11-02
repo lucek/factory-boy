@@ -1,6 +1,6 @@
 # FactoryBoy
 
-TODO: Write a gem description
+Simple, FactoryGirl inspired gem written for ToopLoox coding challenge
 
 ## Installation
 
@@ -18,14 +18,21 @@ Or install it yourself as:
 
     $ gem install factoryboy
 
-## Usage
+## Usage examples
 
-TODO: Write usage instructions here
+```ruby
+FactoryBoy.define_factory(:user) do
+  name "foobar"
+end
 
-## Contributing
+FactoryBoy.build(:user) # => #<User:0x007fb98492834 @name="foobar">
+```
 
-1. Fork it ( https://github.com/[my-github-username]/factoryboy/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+```ruby
+FactoryBoy.define_factory(:admin, class: User) do
+  name "foobar"
+  admin true
+end
+
+FactoryBoy.build(:admin) # => #<User:0x007fb98492834 @name="foobar" @admin=true>
+```
