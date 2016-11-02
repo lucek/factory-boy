@@ -26,7 +26,13 @@ describe Factoryboy do
     end
 
     context "factory has not been defined yet" do
+      before :each do
+        Factoryboy.instance_variable_set(:@defined_factories, [])
+      end
 
+      it "should raise FactoryNotDefined" do
+        expect { Factoryboy.build(User) }.to raise_error(FactoryNotDefinedError)
+      end
     end
   end
 end
