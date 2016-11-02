@@ -12,4 +12,21 @@ describe Factoryboy do
       expect(Factoryboy.instance_variable_get(:@defined_factories)).to include(User)
     end
   end
+
+  describe "#build" do
+    context "factory has already been defined" do
+      before :each do
+        Factoryboy.define_factory(User)
+      end
+
+      it "should return new class instance" do
+        object = Factoryboy.build(User)
+        expect(object).to be_a(User)
+      end
+    end
+
+    context "factory has not been defined yet" do
+
+    end
+  end
 end
