@@ -7,6 +7,10 @@ class User
 end
 
 describe FactoryBoy do
+  before :each do
+    FactoryBoy.instance_variable_set(:@defined_factories, {})
+  end
+
   describe "#define_factory" do
     context "user has not passed class when defining a factory" do
       before :each do
@@ -32,7 +36,6 @@ describe FactoryBoy do
       before :each do
         FactoryBoy.define_factory(:user, class: User) do
           name "foo"
-          admin true
         end
       end
 
@@ -57,10 +60,16 @@ describe FactoryBoy do
         end
 
         context "user has passed attributes to the build method" do
-          it "should return new class instance with passed attributes" do
-            object = FactoryBoy.build(:user, { name: "foo" })
-            expect(object).to be_a(User)
-            expect(object.name).to eql("foo")
+          before :all do
+            @object = FactoryBoy.build(:user, { name: "foo" })
+          end
+
+          it "should return new correct class instance" do
+            expect(@object).to be_a(User)
+          end
+
+          it "instance should have correct attributes set" do
+            expect(@object.name).to eql("foo")
           end
         end
       end
@@ -69,54 +78,49 @@ describe FactoryBoy do
         before :each do
           FactoryBoy.define_factory(:user) do
             name "bar"
+            admin true
           end
         end
 
         context "user hasn't passed any attributes to the build method" do
-          it "should return new class instance with passed attributes" do
-            object = FactoryBoy.build(:user)
-            expect(object).to be_a(User)
-            expect(object.name).to eql("bar")
+          before :each do
+            @object = FactoryBoy.build(:user)
+          end
+
+          it "should return new correct class instance" do
+            expect(@object).to be_a(User)
+          end
+
+          it "instance should have name attribute set" do
+            expect(@object.name).to eql("bar")
+          end
+
+          it "instance should have admin attribute set" do
+            expect(@object.admin).to be true
           end
         end
 
         context "user has passed attributes to the build method" do
-          it "should return new class instance with passed attributes" do
-            object = FactoryBoy.build(:user, { name: "foo" })
-            expect(object).to be_a(User)
-            expect(object.name).to eql("foo")
+          before :each do
+            @object = FactoryBoy.build(:user, { name: "foo", admin: false })
           end
-        end
-      end
 
-      context "user has passed class when defining factory" do
-        before :each do
-          FactoryBoy.define_factory(:test, class: User)
-        end
+          it "should return new class instance with passed attributes" do
+            expect(@object).to be_a(User)
+          end
 
-        it "should return new class instance" do
-          object = FactoryBoy.build(:test)
-          expect(object).to be_a(User)
-        end
-      end
+          it "instance should have default name attribute overwritten" do
+            expect(@object.name).to eql("foo")
+          end
 
-      context "user has not passed class when defining factory" do
-        before :each do
-          FactoryBoy.define_factory(:user)
-        end
-
-        it "should return new class instance" do
-          object = FactoryBoy.build(:test)
-          expect(object).to be_a(User)
+          it "instance should have default admin attribute overwritten" do
+            expect(@object.admin).to be false
+          end
         end
       end
     end
 
     context "factory has not been defined yet" do
-      before :each do
-        FactoryBoy.instance_variable_set(:@defined_factories, {})
-      end
-
       it "should raise FactoryNotDefined" do
         expect { FactoryBoy.build(User) }.to raise_error(FactoryNotDefinedError)
       end
